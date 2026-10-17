@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}添加商品{% endblock %}
+
+{% block content %}
+    <h2>添加商品</h2>
+    <form action="/add" method="get">
+        <p>名称: <input type="text" name="name"></p>
+        <p>数量: <input type="text" name="quantity"></p>
+        <p>单价: <input type="text" name="price"></p>
+        <p>分类: <input type="text" name="category" placeholder="例如：食品/ 文具/ 电子"></p>
+        <input type="submit" value="添加">
+    </form>
+{% endblock %}

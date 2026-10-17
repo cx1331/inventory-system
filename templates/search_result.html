@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <h2>{{ title }}</h2>
+
+    {% if results %}
+        <ul>
+            {% for p in results %}
+                <li>
+                    <strong>{{ p['name'] }}</strong> -
+                    数量:
+                    {% if p['quantity'] < 10 %}
+                        <span class="low-stock">⚠️ {{ p['quantity'] }} (库存不足) </span>
+                    {% else %}
+                        {{ p['quantity'] }}
+                    {% endif %} |
+                    单价: RM{{ "%.2f"|format(p['price']) }} |
+                    分类: {{ p['category'] }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>没有找到匹配的商品。</p>
+    {% endif %}
+
+    <br>
+    <a href="/inventory">🔙 返回库存</a>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}库存列表{% endblock %}
+
+{% block content %}
+    <!-- 按商品名搜索 -->
+    <div class="form-card">
+        <form action="/search" method="get">
+            <input type="text" name="q" placeholder="输入商品名搜索...">
+            <input type="submit" value="🔍 搜索">
+        </form>
+    </div>
+
+    <!-- 按分类筛选 -->
+    <div class="form-card">
+        <form action="/filter_category" method="get">
+            <label>分类: </label>
+            <input type="text" name="cat" placeholder="例如：食品">
+            <input type="submit" value="筛选">
+        </form>
+    </div>
+    
+    <h2>商品列表</h2>
+
+    {% if products %}
+        <ul>
+            {% for p in products %}
+                <li>
+                    <div>
+                        <strong>{{ p['name'] }}</strong> -
+                        数量:
+                        {% if p['quantity'] < 10 %}
+                            <span class="low-stock">⚠️ {{ p['quantity'] }} (库存不足) </span>
+                        {% else %}
+                            {{ p['quantity'] }}
+                        {% endif %} |
+                        单价: RM{{ "%.2f"|format(p['price']) }} |
+                        分类: {{ p['category'] }}
+                    </div>
+                    <div>
+                        <a href="/update_stock_form/{{ p['id'] }}" class="btn">修改库存</a>
+                        <a href="/delete/{{ p['id'] }}" class="btn btn-danger">删除</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>库存为空，请添加商品。</p>
+    {% endif %}
+
+    <br>
+    <a href="/add_form" class="btn">添加商品</a>
+{% endblock %}

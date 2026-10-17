@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}库存管理系统{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <a href="/inventory">库存</a>
+    </nav>
+
+    <h1>库存管理系统</h1>
+    <hr>
+
+    {% block content %}
+    {% endblock %}
+
+    <hr>
+    <a href="/inventory">回到库存</a>
+</body>
+</html>
