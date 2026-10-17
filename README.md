@@ -19,7 +19,7 @@ A simple web application to manage product inventory, built with Flask, SQLite, 
 - HTML/CSS
 
 ## Live demo
-(coming soon)
+[点击访问线上版本](https://inventory-system-86oo.onrender.com)
 
 ## How to Run Locally
 1. Clone this respository
