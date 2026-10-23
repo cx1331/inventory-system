@@ -3,51 +3,70 @@
 {% block title %}库存列表{% endblock %}
 
 {% block content %}
-    <!-- 按商品名搜索 -->
-    <div class="form-card">
-        <form action="/search" method="get">
-            <input type="text" name="q" placeholder="输入商品名搜索...">
-            <input type="submit" value="🔍 搜索">
-        </form>
+<div class="container mt-4">
+    <h2 class="mb-4">商品列表</h2>
+
+    <!-- 搜索和筛选表单 -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form action="/search" method="get" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="输入商品名搜索...">
+                <button type="submit" class="btn btn-primary">搜索</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form action="/filter_category" method="get" class="d-flex">
+                <input type="text" name="cat" class="form-control me-2" placeholder="输入分类筛选...">
+                <button type="submit" class="btn btn-primary">筛选</button>
+            </form>
+        </div>
     </div>
 
-    <!-- 按分类筛选 -->
-    <div class="form-card">
-        <form action="/filter_category" method="get">
-            <label>分类: </label>
-            <input type="text" name="cat" placeholder="例如：食品">
-            <input type="submit" value="筛选">
-        </form>
-    </div>
-    
-    <h2>商品列表</h2>
-
+    <!-- 商品表格 -->
     {% if products %}
-        <ul>
-            {% for p in products %}
-                <li>
-                    <div>
-                        <strong>{{ p['name'] }}</strong> -
-                        数量:
+    <div class="table-responsive shadow-sm">
+        <table class="table table-bordered table-hover align-middle bg-white">
+            <thead class="table-dark">
+                <tr>
+                    <th>商品名</th>
+                    <th>数量</th>
+                    <th>单价</th>
+                    <th>分类</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in products %}
+                <tr>
+                    <td>{{ p['name'] }}</td>
+                    <td>
                         {% if p['quantity'] < 10 %}
-                            <span class="low-stock">⚠️ {{ p['quantity'] }} (库存不足) </span>
+                            <span class="badge bg-danger">{{ p['quantity'] }}</span>
                         {% else %}
                             {{ p['quantity'] }}
-                        {% endif %} |
-                        单价: RM{{ "%.2f"|format(p['price']) }} |
-                        分类: {{ p['category'] }}
-                    </div>
-                    <div>
-                        <a href="/update_stock_form/{{ p['id'] }}" class="btn">修改库存</a>
-                        <a href="/delete/{{ p['id'] }}" class="btn btn-danger">删除</a>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+                        {% endif %}
+                    </td>
+                    <td>RM{{ "%.2f"|format(p['price']) }}</td>
+                    <td>{{ p['category'] }}</td>
+                    <td>{{ p['remark'] or '' }}</td>
+                    <td>
+                        <a href="/update_stock_form/{{ p['id'] }}" class="btn btn-sm btn-outline-success">修改</a>
+                        <a href="/delete/{{ p['id'] }}" class="btn btn-sm btn-outline-danger">删除</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% else %}
-        <p>库存为空，请添加商品。</p>
+    <div class="alert alert-info">库存为空，请添加商品。</div>
     {% endif %}
 
-    <br>
-    <a href="/add_form" class="btn">添加商品</a>
+    <!-- 底部按钮 -->
+     <div class="mt-4">
+        <a href="/export" class="btn btn-success">导出 Excel (CSV)</a>
+        <a href="/add_form" class="btn btn-primary">＋ 添加商品</a>
+     </div>
+</div>
 {% endblock %}
