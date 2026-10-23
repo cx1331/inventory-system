@@ -8,16 +8,17 @@
 
     <!-- 搜索和筛选表单 -->
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3 mb-md-0">
             <form action="/search" method="get" class="d-flex">
                 <input type="text" name="q" class="form-control me-2" placeholder="输入商品名搜索...">
-                <button type="submit" class="btn btn-primary">搜索</button>
+                <!-- 增加了 white-space: nowrap; 强制按钮文字不换行！ -->
+                <button type="submit" class="btn btn-primary" style="white-space: nowrap;">🔍 搜索</button>
             </form>
         </div>
         <div class="col-md-6">
             <form action="/filter_category" method="get" class="d-flex">
                 <input type="text" name="cat" class="form-control me-2" placeholder="输入分类筛选...">
-                <button type="submit" class="btn btn-primary">筛选</button>
+                <button type="submit" class="btn btn-primary" style="white-space: nowrap;">筛选</button>
             </form>
         </div>
     </div>
@@ -42,7 +43,7 @@
                     <td>{{ p['name'] }}</td>
                     <td>
                         {% if p['quantity'] < 10 %}
-                            <span class="badge bg-danger">{{ p['quantity'] }}</span>
+                            <span class="badge bg-danger">⚠️ {{ p['quantity'] }} (库存不足)</span>
                         {% else %}
                             {{ p['quantity'] }}
                         {% endif %}
@@ -64,9 +65,9 @@
     {% endif %}
 
     <!-- 底部按钮 -->
-     <div class="mt-4">
-        <a href="/export" class="btn btn-success">导出 Excel (CSV)</a>
-        <a href="/add_form" class="btn btn-primary">＋ 添加商品</a>
-     </div>
+    <div class="mt-4">
+        <a href="/export" class="btn btn-success">📥 导出 Excel (CSV)</a>
+        <a href="/add_form" class="btn btn-primary">➕ 添加商品</a>
+    </div>
 </div>
 {% endblock %}
