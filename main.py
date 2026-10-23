@@ -169,7 +169,7 @@ def logout():
 # 初始化默认管理员账号 （只在第一次启动时生效）
 with app.app_context():
     if not get_user_by_username("admin"):
-        hashed_pw = generate_password_hash("admin123")
+        hashed_pw = generate_password_hash("mI2026~")
         create_user("admin", hashed_pw)
         print("✅️ 默认管理员账号创建成功：用户名 admin, 密码 admin123")
 
