@@ -3,24 +3,28 @@ import sqlite3
 import psycopg2
 import psycopg2.extras
 
+# 核心：在这里定义变量，电脑就不会报错了
 DATABASE_URL = os.environ.get('DATABASE_URL')
 IS_POSTGRES = DATABASE_URL is not None
 
 def get_db():
     if IS_POSTGRES:
-        # 云端使用 PostgreSQL
-        conn = psycopg2.connect(DATABASE_URL)
-        return conn
+        print("正在使用：云端 PostgreSQL 数据库")
+        return psycopg2.connect(DATABASE_URL)
     else:
-        # 本地使用 SQLite
-        conn = sqlite3.connect('inventory.db')
+        print("正在使用：本地 SQLite 数据库")
+        # 获取当前文件所在的绝对路径，强制数据库跟代码在同一目录
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        db_path = os.path.join(base_dir, 'inventory.db')
+        
+        conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         return conn
 
 def init_db():
     conn = get_db()
     cursor = conn.cursor()
-    
+
     # 针对不同数据库的自增主键写法
     if IS_POSTGRES:
         create_sql = '''
@@ -42,8 +46,8 @@ def init_db():
                 price REAL NOT NULL,
                 category TEXT DEFAULT '未分类',
                 remark TEXT
-            )
-        '''
+                )
+            '''
     cursor.execute(create_sql)
     conn.commit()
     cursor.close()
@@ -54,12 +58,12 @@ def load_products():
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM products ORDER BY id')
     rows = cursor.fetchall()
-    
+
     if IS_POSTGRES:
         products = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
     else:
         products = [dict(row) for row in rows]
-        
+
     cursor.close()
     conn.close()
     return products
@@ -67,11 +71,10 @@ def load_products():
 def add_product(name, quantity, price, category="未分类", remark=""):
     conn = get_db()
     cursor = conn.cursor()
-    
-    # 动态判断占位符
+
     p = "%s" if IS_POSTGRES else "?"
     sql = f'INSERT INTO products (name, quantity, price, category, remark) VALUES ({p}, {p}, {p}, {p}, {p})'
-    
+
     cursor.execute(sql, (name, quantity, price, category, remark))
     conn.commit()
     cursor.close()
@@ -101,7 +104,7 @@ def search_products_by_name(keyword):
     p = "%s" if IS_POSTGRES else "?"
     cursor.execute(f'SELECT * FROM products WHERE name LIKE {p} ORDER BY id', (f'%{keyword}%',))
     rows = cursor.fetchall()
-    
+
     if IS_POSTGRES:
         products = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
     else:
@@ -116,7 +119,7 @@ def search_products_by_category(category):
     p = "%s" if IS_POSTGRES else "?"
     cursor.execute(f'SELECT * FROM products WHERE category = {p} ORDER BY id', (category,))
     rows = cursor.fetchall()
-    
+
     if IS_POSTGRES:
         products = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
     else:
