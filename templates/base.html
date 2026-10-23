@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}库存管理系统{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- 这是 Bootstrap 的官方核心文件，确保引用了！ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <nav>
-        <a href="/inventory">库存</a>
+<body class="bg-light">
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/inventory" style="text-decoration: none; color: white;">📦 库存管理系统</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="/inventory">首页</a>
+                <a class="nav-link text-white" href="/add_form">添加商品</a>
+            </div>
+        </div>
     </nav>
 
-    <h1>库存管理系统</h1>
-    <hr>
-
-    {% block content %}
-    {% endblock %}
-
-    <hr>
-    <a href="/inventory">回到库存</a>
+    <!-- 页面主体内容 -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>
